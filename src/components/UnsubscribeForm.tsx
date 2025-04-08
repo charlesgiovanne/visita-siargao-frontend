@@ -26,13 +26,28 @@ const UnsubscribeForm = ({
     setLoading(true);
     
     try {
-      await authApi.unsubscribeByEmail(email);
-      toast.success("You have been successfully unsubscribed from our newsletter.");
-      setEmail("");
-      setOpen(false);
-    } catch (error) {
+      const response = await authApi.unsubscribeByEmail(email);
+      
+      // Check if the response indicates success
+      if (response && response.status >= 200 && response.status < 300) {
+        toast.success("You have been successfully unsubscribed from our newsletter.");
+        setEmail("");
+        setOpen(false);
+      } else {
+        // Handle unexpected response
+        toast.error("Failed to unsubscribe. Please try again later.");
+      }
+    } catch (error: any) {
       console.error("Error unsubscribing:", error);
-      toast.error("Failed to unsubscribe. Please check your email and try again.");
+      
+      // Check if the error is because the email is not subscribed
+      if (error.response?.status === 404) {
+        toast.info("This email is not currently subscribed to our newsletter.");
+        setEmail("");
+        setOpen(false);
+      } else {
+        toast.error("Failed to unsubscribe. Please check your email and try again.");
+      }
     } finally {
       setLoading(false);
     }
