@@ -30,23 +30,23 @@ const UnsubscribeForm = ({
       
       // Check if the response indicates success
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success("You have been successfully unsubscribed from our newsletter.");
+        toast.success("You have been successfully unsubscribed from our newsletter.", { id: "unsubscribe-success" });
         setEmail("");
         setOpen(false);
       } else {
         // Handle unexpected response
-        toast.error("Failed to unsubscribe. Please try again later.");
+        toast.error("Failed to unsubscribe. Please try again later.", { id: "unsubscribe-error" });
       }
     } catch (error: any) {
       console.error("Error unsubscribing:", error);
       
       // Check if the error is because the email is not subscribed
       if (error.response?.status === 404) {
-        toast.info("This email is not currently subscribed to our newsletter.");
+        toast.info("This email is not currently subscribed to our newsletter.", { id: "unsubscribe-info" });
         setEmail("");
         setOpen(false);
       } else {
-        toast.error("Failed to unsubscribe. Please check your email and try again.");
+        toast.error("Failed to unsubscribe. Please check your email and try again.", { id: "unsubscribe-error" });
       }
     } finally {
       setLoading(false);

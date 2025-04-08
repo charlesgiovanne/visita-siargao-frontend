@@ -26,7 +26,7 @@ const SubscribeForm = ({
       // First try to subscribe normally
       try {
         await authApi.subscribe(email);
-        toast.success("Thank you for subscribing!");
+        toast.success("Thank you for subscribing!", { id: "subscribe-notification" });
         setEmail("");
         return; // Exit early if successful
       } catch (subscribeError: any) {
@@ -34,19 +34,19 @@ const SubscribeForm = ({
         if (subscribeError.response?.data?.detail !== "Email already subscribed") {
           // Try to resubscribe (for previously unsubscribed users)
           await authApi.resubscribe(email);
-          toast.success("Welcome back! Your subscription has been reactivated.");
+          toast.success("Welcome back! Your subscription has been reactivated.", { id: "subscribe-notification" });
           setEmail("");
           return; // Exit early if successful
         } else {
           // User is already subscribed
-          toast.info("You're already subscribed to our newsletter!");
+          toast.info("You're already subscribed to our newsletter!", { id: "subscribe-notification" });
           setEmail("");
           return; // Exit early
         }
       }
     } catch (error: any) {
       console.error("Error with subscription:", error);
-      toast.error("Failed to subscribe. Please try again later.");
+      toast.error("Failed to subscribe. Please try again later.", { id: "subscribe-notification" });
     } finally {
       setLoading(false);
     }
