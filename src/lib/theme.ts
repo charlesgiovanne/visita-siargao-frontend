@@ -44,12 +44,8 @@ export const imageUrls = {
 
 // API configuration
 export const apiConfig = {
-  baseUrl: process.env.NODE_ENV === 'production' 
-    ? 'https://visita-siargao-backend.onrender.com/api'
-    : 'http://localhost:8000/api',
-  mediaUrl: process.env.NODE_ENV === 'production'
-    ? 'https://visita-siargao-backend.onrender.com'
-    : 'http://localhost:8000'
+  baseUrl: 'https://visita-siargao-backend.onrender.com/api',
+  mediaUrl: 'https://visita-siargao-backend.onrender.com'
 };
 
 // Social media links

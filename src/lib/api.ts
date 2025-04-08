@@ -19,6 +19,10 @@ api.interceptors.request.use(
     if (token) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
+      // Ensure the token is properly formatted
+      console.log('Adding auth token to request:', `Bearer ${token.substring(0, 10)}...`);
+    } else {
+      console.log('No auth token found in localStorage');
     }
     return config;
   },
