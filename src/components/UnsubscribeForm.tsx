@@ -23,30 +23,39 @@ const UnsubscribeForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email) return;
+    
     setLoading(true);
     
     try {
-      const response = await authApi.unsubscribeByEmail(email);
+      // Make the API call
+      await authApi.unsubscribeByEmail(email);
       
-      // Check if the response indicates success
-      if (response && response.status >= 200 && response.status < 300) {
-        toast.success("You have been successfully unsubscribed from our newsletter.", { id: "unsubscribe-success" });
-        setEmail("");
-        setOpen(false);
-      } else {
-        // Handle unexpected response
-        toast.error("Failed to unsubscribe. Please try again later.", { id: "unsubscribe-error" });
-      }
+      // Only show success message and close dialog on success
+      toast.success("Successfully unsubscribed from newsletter", { 
+        id: "unsubscribe-success",
+        duration: 3000
+      });
+      
+      // Reset form and close dialog
+      setEmail("");
+      setOpen(false);
     } catch (error: any) {
-      console.error("Error unsubscribing:", error);
+      console.error("Unsubscribe error:", error);
       
-      // Check if the error is because the email is not subscribed
+      // Handle specific error cases
       if (error.response?.status === 404) {
-        toast.info("This email is not currently subscribed to our newsletter.", { id: "unsubscribe-info" });
+        toast.info("This email is not currently subscribed", { 
+          id: "unsubscribe-info",
+          duration: 3000
+        });
         setEmail("");
         setOpen(false);
       } else {
-        toast.error("Failed to unsubscribe. Please check your email and try again.", { id: "unsubscribe-error" });
+        toast.error("Could not process your request", { 
+          id: "unsubscribe-error",
+          duration: 3000
+        });
       }
     } finally {
       setLoading(false);

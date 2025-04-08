@@ -20,13 +20,18 @@ const SubscribeForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email) return;
+    
     setLoading(true);
     
     try {
       // First try to subscribe normally
       try {
         await authApi.subscribe(email);
-        toast.success("Thank you for subscribing!", { id: "subscribe-notification" });
+        toast.success("Thank you for subscribing!", { 
+          id: "subscribe-success",
+          duration: 3000
+        });
         setEmail("");
         return; // Exit early if successful
       } catch (subscribeError: any) {
@@ -34,19 +39,28 @@ const SubscribeForm = ({
         if (subscribeError.response?.data?.detail !== "Email already subscribed") {
           // Try to resubscribe (for previously unsubscribed users)
           await authApi.resubscribe(email);
-          toast.success("Welcome back! Your subscription has been reactivated.", { id: "subscribe-notification" });
+          toast.success("Welcome back! Your subscription has been reactivated.", { 
+            id: "subscribe-success",
+            duration: 3000
+          });
           setEmail("");
           return; // Exit early if successful
         } else {
           // User is already subscribed
-          toast.info("You're already subscribed to our newsletter!", { id: "subscribe-notification" });
+          toast.info("You're already subscribed to our newsletter!", { 
+            id: "subscribe-info",
+            duration: 3000
+          });
           setEmail("");
           return; // Exit early
         }
       }
     } catch (error: any) {
       console.error("Error with subscription:", error);
-      toast.error("Failed to subscribe. Please try again later.", { id: "subscribe-notification" });
+      toast.error("Failed to subscribe. Please try again later.", { 
+        id: "subscribe-error",
+        duration: 3000
+      });
     } finally {
       setLoading(false);
     }
